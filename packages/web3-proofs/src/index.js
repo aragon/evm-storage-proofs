@@ -24,11 +24,11 @@ class Web3Proofs {
     const storageProofs = await Promise.all(proof.storageProof.map(
       (storageProof) => this.verifyStorageProof(proof.storageHash, storageProof)
     ))
-    const failed = storageProofs
+    const failedProofs = storageProofs
       .filter((result, i) => !result) // filter failed proofs
       .map((_, i) => i)
 
-    if (failed.length > 0) {
+    if (failedProofs.length > 0) {
       throw new Error(`Proof failed for storage proofs ${JSON.stringify(failed)}`)
     }
 
@@ -52,9 +52,9 @@ class Web3Proofs {
     const path = this.web3.utils.soliditySha3({t: 'uint256', v: storageProof.key }).slice(2)
 
     const proofStorageValue = await this.verifyProof(storageRoot, Buffer.from(path, 'hex'), storageProof.proof)
-    const stateStorageValue = Buffer.from(storageProof.value.slice(2), 'hex')
+    const stateValueRLP = RLP.encode(storageProof.value)
 
-    return Buffer.compare(proofStorageValue, stateStorageValue) === 0
+    return Buffer.compare(proofStorageValue, stateValueRLP) === 0
   }
 
   async verifyProof (rootHash, path, proof) {
