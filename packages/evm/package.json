@@ -1,0 +1,15 @@
+{
+  "name": "@aragon/evm-storage-proofs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "truffle test"
+  },
+  "author": "Aragon One AG",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@aragon/test-helpers": "^1.0.1",
+    "truffle": "^5.0.0-next.17"
+  }
+}
