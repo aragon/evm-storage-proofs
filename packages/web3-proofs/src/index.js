@@ -5,8 +5,14 @@ class Web3Proofs {
     this.web3 = new Web3(provider)
   }
 
-  getProof (account, storageKeys = [], blockNumber = 'latest') {
-    return this._jsonRpcSend('eth_getProof', [account, storageKeys, blockNumber])
+  async getProof (account, storageKeys = [], blockNumber = 'latest') {
+    const proof = await this._jsonRpcSend('eth_getProof', [account, storageKeys, blockNumber])
+    const block = await this.web3.eth.getBlock(blockNumber)
+
+    return {
+      proof,
+      block
+    }
   }
 
   _jsonRpcSend(method, params) {
