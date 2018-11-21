@@ -13,11 +13,17 @@ const runMainnet = async () => {
   const proofs = new Web3Proofs(provider)
   const ANT = '0x960b236A07cf122663c4303350609A66A7B288C0'
   const storageSlots = ['2'] // decimals slot
-  const response = await proofs.getProof(ANT, storageSlots)
-  console.log(response.proof.storageProof[0])
-  console.log(proofs.web3.utils.soliditySha3('2'))
-
+  const blockNumber = '3723000'
+  const {
+    proof,
+    block,
+    blockHeaderRLP
+  } = await proofs.getProof(ANT, storageSlots, blockNumber)
+  // console.log(response.proof.storageProof[0])
+  // console.log(proofs.web3.utils.soliditySha3('2'))
   // last node in storage proof is [3 bytes 🤷‍ (rlp prefix??)][last 29 bytes of H('2')][value]
+
+  console.log(blockHeaderRLP)
 }
 
 runMainnet()

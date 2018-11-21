@@ -9,6 +9,8 @@
   "author": "Aragon One AG",
   "license": "GPL-3.0",
   "dependencies": {
+    "ethereumjs-block": "^2.1.0",
+    "rlp": "^2.1.0",
     "web3": "^1.0.0-beta.36"
   }
 }
