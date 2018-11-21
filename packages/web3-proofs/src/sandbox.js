@@ -4,8 +4,9 @@ const Web3Proofs = require('./index')
 const runLocal = async () => {
   const provider = new Web3.providers.WebsocketProvider('ws://localhost:8546')
   const proofs = new Web3Proofs(provider)
-  const response = await proofs.getProof('0x830ad8ef8b5b1c7f22fde94ddb30a19b2c34c2c8')
-  console.log(response)
+  const { proof } = await proofs.getProof('0x70657e6c6B4b6920fbfc78E1A97002A85ce4e205')
+  console.log(proof)
+  console.log('successfully generated and verified proofs')
 }
 
 const runMainnet = async () => {
@@ -13,17 +14,18 @@ const runMainnet = async () => {
   const proofs = new Web3Proofs(provider)
   const ANT = '0x960b236A07cf122663c4303350609A66A7B288C0'
   const storageSlots = ['2'] // decimals slot
-  const blockNumber = '3723000'
+  const blockNumber = 'latest'
   const {
     proof,
     block,
     blockHeaderRLP
   } = await proofs.getProof(ANT, storageSlots, blockNumber)
-  // console.log(response.proof.storageProof[0])
+  console.log(proof)
+  console.log('successfully generated and verified proofs')
+
+  // console.log(proof.storageProof[0])
   // console.log(proofs.web3.utils.soliditySha3('2'))
   // last node in storage proof is [3 bytes 🤷‍ (rlp prefix??)][last 29 bytes of H('2')][value]
-
-  console.log(blockHeaderRLP)
 }
 
 runMainnet()
