@@ -46,7 +46,7 @@ contract('Storage Oracle', (accounts) => {
     })
   })
 
-  context.only('account proofs', () => {
+  context('account proofs', () => {
     let storageTester, blockNumber, proof
 
     beforeEach(async () => {
@@ -70,16 +70,17 @@ contract('Storage Oracle', (accounts) => {
     })
   })
 
-  context.only('storage proofs', () => {
-    let storageTester, blockNumber, proof, initialValue
+  context('storage proofs', () => {
+    let storageTester, blockNumber, proof, initialValue, mappingSlot
 
-    const SLOT = '0'
+    const INT_SLOT = '0'
 
     beforeEach(async () => {
       storageTester = await StorageTester.new()
+      mappingSlot = await storageTester.mapStorageSlot()
       blockNumber = await getBlockNumber()
 
-      proof = await web3proofs.getProof(storageTester.address, [SLOT], blockNumber, false)
+      proof = await web3proofs.getProof(storageTester.address, [INT_SLOT, mappingSlot], blockNumber, false)
 
       initialValue = await storageTester.i()
       await storageTester.bump() // we bump on the next block
@@ -92,15 +93,26 @@ contract('Storage Oracle', (accounts) => {
       )
     })
 
-    it('gets storage from proof', async () => {
+    it('gets simple storage value from proof', async () => {
       const value = await storageOracle.getStorage.call(
         storageTester.address,
         blockNumber,
-        SLOT,
+        INT_SLOT,
         proof.storageProofsRLP[0]
       )
 
       assert.equal(value.toNumber(), initialValue.toNumber())
+    })
+
+    it('gets mapping value from storage proof', async () => {
+      const value = await storageOracle.getStorage.call(
+        storageTester.address,
+        blockNumber,
+        mappingSlot,
+        proof.storageProofsRLP[1]
+      )
+
+      assert.equal(value.toNumber(), await storageTester.map(storageTester.address))
     })
   })
 })
