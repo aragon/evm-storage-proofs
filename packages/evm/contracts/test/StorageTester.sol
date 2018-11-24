@@ -6,7 +6,7 @@ contract StorageTester {
   mapping (address => uint256) public map;
 
   constructor() public {
-    map[address(this)] = 100;
+    map[address(this)] = 1000;
   }
 
   function bump() external {

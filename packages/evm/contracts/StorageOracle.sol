@@ -4,14 +4,16 @@ import "./TrieProofs.sol";
 
 
 contract StorageOracle {
+    using TrieProofs for bytes;
     using RLP for RLP.RLPItem;
     using RLP for bytes;
-    using TrieProofs for bytes;
 
     uint8 private constant ACCOUNT_STORAGE_ROOT_INDEX = 2;
 
     string private constant ERROR_BLOCKHASH_NOT_AVAILABLE = "BLOCKHASH_NOT_AVAILABLE";
     string private constant ERROR_INVALID_BLOCK_HEADER = "INVALID_BLOCK_HEADER";
+
+    string private constant ERROR_UNPROCESSED_STORAGE_ROOT = "UNPROCESSED_STORAGE_ROOT";
 
     // Proven storage root for account at block number
     mapping (address => mapping (uint256 => bytes32)) public storageRoot;
@@ -42,6 +44,24 @@ contract StorageOracle {
         storageRoot[account][blockNumber] = accountStorageRoot; // Cache the storage root in storage as proccessing is expensive
 
         emit ProcessStorageRoot(account, blockNumber, accountStorageRoot);
+    }
+
+    // TODO: support exclusion proofs
+    function getStorage(
+        address account,
+        uint256 blockNumber,
+        uint256 slot,
+        bytes memory storageProof
+    )
+        public /*view*/ // TODO: remove logs from TrieProofs
+        returns (uint256)
+    {
+        bytes32 root = storageRoot[account][blockNumber];
+        require(root != bytes32(0), ERROR_UNPROCESSED_STORAGE_ROOT);
+
+        // The path for a storage value is the hash of its slot
+        bytes32 proofPath = keccak256(abi.encodePacked(slot));
+        return storageProof.verify(root, proofPath).toRLPItem().toUint();
     }
 
     /**

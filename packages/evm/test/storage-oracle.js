@@ -46,7 +46,7 @@ contract('Storage Oracle', (accounts) => {
     })
   })
 
-  context('account proofs', () => {
+  context.only('account proofs', () => {
     let storageTester, blockNumber, proof
 
     beforeEach(async () => {
@@ -54,7 +54,6 @@ contract('Storage Oracle', (accounts) => {
       blockNumber = await getBlockNumber()
 
       proof = await web3proofs.getProof(storageTester.address, [], blockNumber, false)
-      await storageTester.bump()
     })
 
     it('proccesses valid proof', async () => {
@@ -68,6 +67,40 @@ contract('Storage Oracle', (accounts) => {
       console.log(receipt.gasUsed)
 
       assert.equal(await storageOracle.storageRoot(storageTester.address, blockNumber), proof.proof.storageHash)
+    })
+  })
+
+  context.only('storage proofs', () => {
+    let storageTester, blockNumber, proof, initialValue
+
+    const SLOT = '0'
+
+    beforeEach(async () => {
+      storageTester = await StorageTester.new()
+      blockNumber = await getBlockNumber()
+
+      proof = await web3proofs.getProof(storageTester.address, [SLOT], blockNumber, false)
+
+      initialValue = await storageTester.i()
+      await storageTester.bump() // we bump on the next block
+
+      await storageOracle.processStorageRoot(
+        storageTester.address,
+        blockNumber,
+        proof.blockHeaderRLP,
+        proof.accountProofRLP
+      )
+    })
+
+    it('gets storage from proof', async () => {
+      const value = await storageOracle.getStorage.call(
+        storageTester.address,
+        blockNumber,
+        SLOT,
+        proof.storageProofsRLP[0]
+      )
+
+      assert.equal(value.toNumber(), initialValue.toNumber())
     })
   })
 })

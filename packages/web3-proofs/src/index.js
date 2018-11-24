@@ -37,12 +37,14 @@ class Web3Proofs {
     }
 
     const accountProofRLP = this.encodeProof(proof.accountProof)
+    const storageProofsRLP = proof.storageProof.map(p => this.encodeProof(p.proof))
 
     return {
       proof,
       block,
       blockHeaderRLP,
-      accountProofRLP
+      accountProofRLP,
+      storageProofsRLP
     }
   }
 
