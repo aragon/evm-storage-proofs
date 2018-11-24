@@ -10,6 +10,8 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@aragon/test-helpers": "^1.0.1",
-    "truffle": "^5.0.0-next.17"
+    "@aragon/web3-proofs": "^1.0.0",
+    "truffle": "^4.1.14",
+    "web3-utils": "^1.0.0-beta.36"
   }
 }

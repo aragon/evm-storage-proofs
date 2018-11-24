@@ -5,38 +5,49 @@ const Trie = require('merkle-patricia-tree')
 const { promisify } = require('util')
 
 class Web3Proofs {
-  constructor (provider) {
+  constructor (provider = new Web3.providers.WebsocketProvider('ws://localhost:8546')) {
     this.web3 = new Web3(provider)
   }
 
-  async getProof (address, storageKeys = [], blockNumber = 'latest') {
-    const proof = await this._jsonRpcSend('eth_getProof', [address, storageKeys, blockNumber])
+  async getProof (address, storageKeys = [], blockNumber = 'latest', verify = true) {
+    const proof = await this._jsonRpcSend('eth_getProof', [address, storageKeys, this.web3.utils.toHex(blockNumber)])
     const block = await this.web3.eth.getBlock(blockNumber)
     const blockHeaderRLP = this._blockHeaderRLP(block)
 
-    // Verify account proof locally
-    const accountProofVerification = await this.verifyAccountProof(block.stateRoot, address, proof)
-    if (!accountProofVerification) {
-      throw new Error('Local verification of account proof failed')
+    if (verify) {
+      // Verify account proof locally
+      const accountProofVerification = await this.verifyAccountProof(block.stateRoot, address, proof)
+      if (!accountProofVerification) {
+        throw new Error('Local verification of account proof failed')
+      }
+
+
+      // Verify storage proofs locally
+      const storageProofs = await Promise.all(proof.storageProof.map(
+        (storageProof) => this.verifyStorageProof(proof.storageHash, storageProof)
+      ))
+
+      const failedProofs = storageProofs
+        .filter((result, i) => !result) // filter failed proofs
+        .map((_, i) => i)
+
+      if (failedProofs.length > 0) {
+        throw new Error(`Proof failed for storage proofs ${JSON.stringify(failed)}`)
+      }
     }
 
-    // Verify storage proofs locally
-    const storageProofs = await Promise.all(proof.storageProof.map(
-      (storageProof) => this.verifyStorageProof(proof.storageHash, storageProof)
-    ))
-    const failedProofs = storageProofs
-      .filter((result, i) => !result) // filter failed proofs
-      .map((_, i) => i)
-
-    if (failedProofs.length > 0) {
-      throw new Error(`Proof failed for storage proofs ${JSON.stringify(failed)}`)
-    }
+    const accountProofRLP = this.encodeProof(proof.accountProof)
 
     return {
       proof,
       block,
-      blockHeaderRLP
+      blockHeaderRLP,
+      accountProofRLP
     }
+  }
+
+  encodeProof (proof) {
+    return '0x' + RLP.encode(proof.map(part => RLP.decode(part))).toString('hex')
   }
 
   async verifyAccountProof (stateRoot, address, proof) {
@@ -97,6 +108,7 @@ class Web3Proofs {
     return new Promise((resolve, reject) => {
       this.web3.currentProvider.send(payload, (err, response) => {
         if (err) return reject(err)
+        if (response.error) return reject(new Error(response.error.message))
         resolve(response.result)
       })
     })

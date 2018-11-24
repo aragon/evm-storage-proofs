@@ -1,9 +1,18 @@
+const Web3Proofs = require('@aragon/web3-proofs')
+
 const { assertRevert } = require('@aragon/test-helpers/assertThrow')
+const getBlockNumber = require('@aragon/test-helpers/blockNumber')(web3)
+const { hexToAscii } = require('web3-utils')
 
 const StorageOracle = artifacts.require('StorageOracle')
+const StorageTester = artifacts.require('StorageTester')
 
 contract('Storage Oracle', (accounts) => {
-  let storageOracle
+  let storageOracle, web3proofs
+
+  before(async () => {
+    web3proofs = new Web3Proofs()
+  })
 
   beforeEach(async () => {
     storageOracle = await StorageOracle.new()
@@ -34,6 +43,31 @@ contract('Storage Oracle', (accounts) => {
       await assertRevert(() =>
         storageOracle.getStateRoot(truncatedHeader, hash)
       )
+    })
+  })
+
+  context('account proofs', () => {
+    let storageTester, blockNumber, proof
+
+    beforeEach(async () => {
+      storageTester = await StorageTester.new()
+      blockNumber = await getBlockNumber()
+
+      proof = await web3proofs.getProof(storageTester.address, [], blockNumber, false)
+      await storageTester.bump()
+    })
+
+    it('proccesses valid proof', async () => {
+      const { receipt } = await storageOracle.processStorageRoot(
+        storageTester.address,
+        blockNumber,
+        proof.blockHeaderRLP,
+        proof.accountProofRLP
+      )
+
+      console.log(receipt.gasUsed)
+
+      assert.equal(await storageOracle.storageRoot(storageTester.address, blockNumber), proof.proof.storageHash)
     })
   })
 })
