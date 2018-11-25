@@ -8,4 +8,4 @@ node_js:
 env:
   - TASK=test
 script:
-  - travis_wait npm run $TASK
+  - npm run $TASK
