@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install": "lerna bootstrap"
+    "install": "lerna bootstrap",
+    "test": "lerna run --scope=@aragon/evm-storage-proofs --stream test"
   },
   "author": "Aragon One AG",
   "license": "GPL-3.0",

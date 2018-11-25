@@ -1,4 +1,4 @@
-# EVM Storage Proofs
+# EVM Storage Proofs [![Build Status](https://travis-ci.org/aragon/evm-storage-proofs.svg?branch=master)](https://travis-ci.org/aragon/evm-storage-proofs)
 > aka the Ethereum State Time Machine 🧙‍♂️
 
 EVM Storage Proofs allow to trustlessly prove a past storage value in a contract to other contracts.

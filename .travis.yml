@@ -1,0 +1,11 @@
+services:
+  - docker
+language: node_js
+notifications:
+  email: false
+node_js:
+  - '8'
+env:
+  - TASK=test
+script:
+  - travis_wait npm run $TASK
