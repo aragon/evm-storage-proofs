@@ -45,14 +45,13 @@ contract StorageOracle {
         emit ProcessStorageRoot(account, blockNumber, accountStorageRoot);
     }
 
-    // TODO: support exclusion proofs
     function getStorage(
         address account,
         uint256 blockNumber,
         uint256 slot,
         bytes memory storageProof
     )
-        public /*view*/ // TODO: remove logs from TrieProofs
+        public view // TODO: remove logs from TrieProofs
         returns (uint256)
     {
         bytes32 root = storageRoot[account][blockNumber];

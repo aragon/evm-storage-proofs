@@ -1,7 +1,7 @@
 const Web3Proofs = require('@aragon/web3-proofs')
 
 const getBlockNumber = require('@aragon/test-helpers/blockNumber')(web3)
-const assertRevert = require('./helpers/assert-revert-geth')(web3)
+const { assertRevert } = require('./helpers/assert-revert-geth')(web3)
 
 const StorageOracle = artifacts.require('StorageOracle')
 const StorageTester = artifacts.require('StorageTester')
