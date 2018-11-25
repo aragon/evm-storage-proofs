@@ -1,14 +1,16 @@
 const Web3Proofs = require('@aragon/web3-proofs')
 
-const { assertRevert } = require('@aragon/test-helpers/assertThrow')
 const getBlockNumber = require('@aragon/test-helpers/blockNumber')(web3)
-const { hexToAscii } = require('web3-utils')
+const assertRevert = require('./helpers/assert-revert-geth')(web3)
 
 const StorageOracle = artifacts.require('StorageOracle')
 const StorageTester = artifacts.require('StorageTester')
 
+
 contract('Storage Oracle', (accounts) => {
   let storageOracle, web3proofs
+
+  const INVALID_BLOCK_HEADER_ERROR = 'INVALID_BLOCK_HEADER'
 
   before(async () => {
     web3proofs = new Web3Proofs()
@@ -31,8 +33,9 @@ contract('Storage Oracle', (accounts) => {
       // replace the last byte of the header
       const modifiedHeader = headerRLP.slice(0, -2) + '60'
 
-      await assertRevert(() =>
-        storageOracle.getStateRoot(modifiedHeader, hash)
+      await assertRevert(
+        storageOracle.getStateRoot.request(modifiedHeader, hash),
+        INVALID_BLOCK_HEADER_ERROR
       )
     })
 
@@ -40,8 +43,9 @@ contract('Storage Oracle', (accounts) => {
       const { headerRLP, hash } = require('./data/block-3723000')
       const truncatedHeader = headerRLP.slice(0, 244) // too short
 
-      await assertRevert(() =>
-        storageOracle.getStateRoot(truncatedHeader, hash)
+      await assertRevert(
+        storageOracle.getStateRoot.request(truncatedHeader, hash),
+        INVALID_BLOCK_HEADER_ERROR
       )
     })
   })

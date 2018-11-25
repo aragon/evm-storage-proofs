@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "truffle test"
+    "test": "npm run start:geth && truffle test --network development; npm run stop:geth",
+    "start:geth": "docker run -p 8545:8545 -p 8546:8546 -e DEV_CHAIN_ENABLED=true --name geth-esp-test aragon/geth-devnet &>/dev/null &",
+    "stop:geth": "docker rm -f geth-esp-test"
   },
   "author": "Aragon One AG",
   "license": "GPL-3.0",

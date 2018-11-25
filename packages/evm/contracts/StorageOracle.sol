@@ -12,7 +12,6 @@ contract StorageOracle {
 
     string private constant ERROR_BLOCKHASH_NOT_AVAILABLE = "BLOCKHASH_NOT_AVAILABLE";
     string private constant ERROR_INVALID_BLOCK_HEADER = "INVALID_BLOCK_HEADER";
-
     string private constant ERROR_UNPROCESSED_STORAGE_ROOT = "UNPROCESSED_STORAGE_ROOT";
 
     // Proven storage root for account at block number
