@@ -83,56 +83,52 @@ library TrieProofs {
                     return node[1].toBytes(); // Data is the second item in a leaf node
                 } else {
                     // not last proof item
-                    nodeChildren = extractNibble(path32, pathOffset);
-                    children = node[nodeChildren];
+                    children = node[1];
                     if (!children.isList()) {
                         nextHash = getNextHash(children);
                     } else {
                         nextHash = keccak256(children.toRLPBytes());
                     }
                 }
-            }
-
-            // Branch node
-            require(node.length == 17);
-
-            if (i == proof.length - 1) {
-                // Proof ends in a branch node, exclusion proof in most cases
-                require(pathOffset + 1 == path.length);
-                return node[16].toBytes();
             } else {
-                require(pathOffset < path.length, "Continuing branch has depleted path");
+                // Must be a branch node at this point
+                require(node.length == 17, "Invalid node length");
 
-                nodeChildren = extractNibble(path32, pathOffset);
-                emit Log("Extracted", nodeChildren);
-                children = node[nodeChildren];
+                if (i == proof.length - 1) {
+                    // Proof ends in a branch node, exclusion proof in most cases
+                    require(pathOffset + 1 == path.length);
+                    return node[16].toBytes();
+                } else {
+                    require(pathOffset < path.length, "Continuing branch has depleted path");
 
-                pathOffset += 1; // advance by one
+                    nodeChildren = extractNibble(path32, pathOffset);
+                    emit Log("Extracted", nodeChildren);
+                    children = node[nodeChildren];
 
-                if (i != proof.length - 1) {
-                    // not last level
-                    if (!children.isList()) {
-                        nextHash = getNextHash(children);
-                    } else {
-                        nextHash = keccak256(children.toRLPBytes());
+                    pathOffset += 1; // advance by one
+
+                    if (i != proof.length - 1) {
+                        // not last level
+                        if (!children.isList()) {
+                            nextHash = getNextHash(children);
+                        } else {
+                            nextHash = keccak256(children.toRLPBytes());
+                        }
+                    } else { // last proof part
+                        // must have an empty hash, everything else is invalid
+                        require(children.toBytes().length == 0, "Should be empty children");
+                        require(pathOffset == path.length, "Unexpected end of proof (branch)");
+
+                        return new bytes(0);
                     }
-                } else { // last proof part
-                    // must have an empty hash, everything else is invalid
-                    require(children.toBytes().length == 0, "Should be empty children");
-                    require(pathOffset == path.length, "Unexpected end of proof (branch)");
-
-                    return new bytes(0);
                 }
             }
         }
-
-        // We should never reach this point.
-        assert(false);
     }
 
     function getNextHash(RLP.RLPItem memory node) internal pure returns (bytes32 nextHash) {
         bytes memory nextHashBytes = node.toBytes();
-        require(nextHashBytes.length == 32);
+        require(nextHashBytes.length == 32, "Invalid node");
 
         assembly { nextHash := mload(add(nextHashBytes, 0x20)) }
     }
