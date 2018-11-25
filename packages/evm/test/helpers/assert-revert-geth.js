@@ -42,8 +42,8 @@ module.exports = web3 => {
 
           errorMessageHex =
             errorMessageHex.length % 2 == 0
-            ? errorMessageHex :
-            `${errorMessageHex}0` // add a trailing 0 in case we removed one extra (could be done with a smarter regex)
+            ? errorMessageHex
+            : `${errorMessageHex}0` // add a trailing 0 in case we removed one extra (could be done with a smarter regex)
 
           const decodedError = hexToAscii('0x' + errorMessageHex)
           assert.equal(decodedError, reason, 'Revert reason should match')
