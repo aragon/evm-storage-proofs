@@ -13,6 +13,7 @@ contract TokenStorageProofs {
     }
 
     string private constant ERROR_INVALID_MINIME_PROOF_LENGTH = "INVALID_MINIME_PROOF_LENGTH";
+    string private constant ERROR_UNSUPPORTED_TOKEN_TYPE = "UNSUPPORTED_TOKEN_TYPE";
 
     // should be deployed at a deterministic address
     StorageOracle public storageOracle; // unsure on the value of composition vs inheritance here
@@ -42,7 +43,7 @@ contract TokenStorageProofs {
             return getMiniMeCheckpointValue(token, blockNumber, baseSlot, proof);
         }
 
-        return 0;
+        revert(ERROR_UNSUPPORTED_TOKEN_TYPE);
     }
 
     function getTotalSupply(
@@ -62,6 +63,8 @@ contract TokenStorageProofs {
         if (tokenType == TokenType.MiniMe) {
             return getMiniMeCheckpointValue(token, blockNumber, basePosition, proof);
         }
+
+        revert(ERROR_UNSUPPORTED_TOKEN_TYPE);
     }
 
     function getVanillaERC20BalanceSlot(address holder, uint256 balanceMappingPosition) public pure returns (bytes32) {
