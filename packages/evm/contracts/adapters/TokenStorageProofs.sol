@@ -87,7 +87,7 @@ contract TokenStorageProofs {
         internal view
         returns (uint256)
     {
-        // proof is an RLP encoded array with 2 proofs (first one to checkpoint length, second one to actual balance)
+        // proof is an RLP encoded array with 2 proofs (first one to checkpoint length, second one to the actual balance)
         RLP.RLPItem[] memory proofs = proof.toRLPItem().toList();
 
         uint256 checkpointsLength = storageOracle.getStorage(token, blockNumber, baseSlot, proofs[0].toBytes());

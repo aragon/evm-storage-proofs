@@ -2,6 +2,10 @@ pragma solidity ^0.4.24;
 
 import "./RLP.sol";
 
+/*
+Forked from: https://github.com/lorenzb/proveth/blob/master/onchain/ProvethVerifier.sol
+*/
+
 
 library TrieProofs {
     using RLP for RLP.RLPItem;
@@ -158,7 +162,7 @@ library TrieProofs {
     }
 
     function merklePatriciaCompactDecode(bytes memory compact) internal pure returns (bytes memory nibbles) {
-        require(compact.length > 0, "idiot length");
+        require(compact.length > 0, "Empty bytes array");
         uint first_nibble = uint8(compact[0]) >> 4 & 0xF;
         uint skipNibbles;
         if (first_nibble == 0) {
@@ -184,14 +188,5 @@ library TrieProofs {
             }
         }
         return i;
-    }
-
-    // TODO: wtf is hash hash needed?!!!!?!!?!?!
-    function mptHashHash(bytes memory input) internal pure returns (bytes32) {
-        if (input.length < 32) {
-            return keccak256(input);
-        } else {
-            return keccak256(abi.encodePacked(keccak256(abi.encodePacked(input))));
-        }
     }
 }

@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "./TrieProofs.sol";
+import "./lib/TrieProofs.sol";
 
 
 contract StorageOracle {
@@ -51,7 +51,7 @@ contract StorageOracle {
         uint256 slot,
         bytes memory storageProof
     )
-        public view // TODO: remove logs from TrieProofs
+        public view
         returns (uint256)
     {
         bytes32 root = storageRoot[account][blockNumber];

@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
-import "../TrieProofs.sol";
-import "../RLP.sol";
+import "../lib/TrieProofs.sol";
+import "../lib/RLP.sol";
 
 
 contract VerifyTester {
