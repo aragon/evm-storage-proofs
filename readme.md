@@ -1,5 +1,5 @@
 # EVM Storage Proofs
-> aka Ethereum State Time Machine 🧙‍♂️
+> aka the Ethereum State Time Machine 🧙‍♂️
 
 EVM Storage Proofs allow to trustlessly prove a past storage value in a contract to other contracts.
 
@@ -87,7 +87,7 @@ An example adapter has been built to prove historic token balances, [`TokenStora
 
 The [`TokenStorageProofs`](./packages/evm/contracts/adapters/TokenStorageProofs.sol) contract exposes two functions `getBalance` and `getTotalSupply`, which provided with the correct proof, will return the historic values from the token contract storage.
 
-⚠ The source code of the token contract must be inspected to calculate the base storage slot for the balances mapping and the storage slot for the total supply.
+⚠️ The source code of the token contract must be inspected to calculate the base storage slot for the balances mapping and the storage slot for the total supply.
 
 🚨 The token adapter **can only read raw storage values**. If a token executes arbitrary logic for returning balances or the supply, a custom adapter must be built. See for example how [MiniMe token balances are proven](./packages/evm/contracts/adapters/TokenStorageProofs.sol), which requires two merkle proofs because of how MiniMe stores data.
 
