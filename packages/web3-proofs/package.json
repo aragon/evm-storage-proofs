@@ -6,8 +6,8 @@
   "scripts": {
     "sandbox": "node src/sandbox.js"
   },
-  "author": "Aragon One AG",
-  "license": "GPL-3.0",
+  "author": "Aragon One AG <contact@aragon.one>",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "ethereumjs-block": "^2.1.0",
     "merkle-patricia-tree": "^2.3.2",
