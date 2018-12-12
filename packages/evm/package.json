@@ -9,8 +9,8 @@
     "stop:geth": "docker rm -f geth-esp-test",
     "docker:geth:pull": "docker pull aragon/geth-devnet"
   },
-  "author": "Aragon One AG",
-  "license": "GPL-3.0",
+  "author": "Aragon One AG <contact@aragon.one>",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@aragon/apps-shared-minime": "^1.0.0",
     "@aragon/test-helpers": "^1.0.1",

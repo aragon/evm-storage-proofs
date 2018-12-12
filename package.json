@@ -7,8 +7,8 @@
     "install": "lerna bootstrap",
     "test": "lerna run --scope=@aragon/evm-storage-proofs --stream test"
   },
-  "author": "Aragon One AG",
-  "license": "GPL-3.0",
+  "author": "Aragon One AG <contact@aragon.one>",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "lerna": "^3.4.3"
   }
