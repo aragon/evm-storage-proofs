@@ -36,7 +36,7 @@ library RLP {
     * @param item RLP encoded list in bytes
     */
     function toList(RLPItem memory item) internal pure returns (RLPItem[] memory result) {
-        require(isList(item));
+        require(isList(item), "Cannot convert to list a non-list RLPItem.");
 
         uint items = numItems(item);
         result = new RLPItem[](items);

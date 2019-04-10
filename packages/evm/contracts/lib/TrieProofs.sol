@@ -134,16 +134,16 @@ library TrieProofs {
     * Nibble is extracted as the least significant nibble in the returned byte
     */
     function extractNibble(bytes32 path, uint256 position) internal pure returns (uint8 nibble) {
-        require(position < 64);
+        require(position < 64, "Invalid nibble position");
         byte shifted = position == 0 ? byte(path >> 4) : byte(path << ((position - 1) * 4));
         return uint8(byte(shifted & 0xF));
     }
 
     function decodeNibbles(bytes memory compact, uint skipNibbles) internal pure returns (bytes memory nibbles) {
-        require(compact.length > 0);
+        require(compact.length > 0, "Empty bytes array");
 
         uint length = compact.length * 2;
-        require(skipNibbles <= length);
+        require(skipNibbles <= length, "Skip nibbles amount too large");
         length -= skipNibbles;
 
         nibbles = new bytes(length);
