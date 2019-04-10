@@ -36,7 +36,7 @@ The current implementation uses the `eth_getProof` RPC method ([EIP 1186](https:
 For generating proofs using the JS library:
 
 ```.js
-const Web3Proofs = require('@aragon/web3-proofs') // Not published to NPM yet, requires a local 'npm link'
+const Web3Proofs = require('@aragon/web3-proofs')
 
 const web3proofs = new Web3Proofs(web3.currentProvider) // Or a web3.js 1.0 compatible provider
 
