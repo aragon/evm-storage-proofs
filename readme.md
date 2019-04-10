@@ -1,4 +1,4 @@
-# EVM Storage Proofs [![Build Status](https://travis-ci.org/aragon/evm-storage-proofs.svg?branch=master)](https://travis-ci.org/aragon/evm-storage-proofs)
+# EVM Storage Proofs [![Build Status](https://travis-ci.org/aragon/evm-storage-proofs.svg?branch=master)](https://travis-ci.org/aragon/evm-storage-proofs) [![npm](https://img.shields.io/npm/v/@aragon/evm-storage-proofs.svg?style=for-the-badge)](https://www.npmjs.com/package/@aragon/evm-storage-proofs)
 > aka the Ethereum Storage Time Machine 🧙‍♂️
 
 EVM Storage Proofs allow to trustlessly prove a past storage value in a contract to other contracts.
