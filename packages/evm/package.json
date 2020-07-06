@@ -15,6 +15,7 @@
     "@aragon/apps-shared-minime": "^1.0.0",
     "@aragon/test-helpers": "^1.0.1",
     "@aragon/web3-proofs": "^0.1.0",
+    "eth-gas-reporter": "^0.2.17",
     "rlp": "^2.1.0",
     "truffle": "^4.1.14",
     "web3-utils": "^1.0.0-beta.36"
